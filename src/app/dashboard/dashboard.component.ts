@@ -127,6 +127,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
    showAlternateView: boolean = false;
    refreshPerformed : boolean = false;
+
+   bookingResourceTitle:any;
     
 
   constructor(
@@ -1061,7 +1063,7 @@ for (let i = 0; i < ecDayElements.length; i++) {
           this.highlightResources(true)
         }
 
-
+        this.getCalendarBookingData();
         successCallback(newData);
 
       },
@@ -1545,9 +1547,6 @@ const checkLoadingInterval = setInterval(() => {
    onMonthEventMouseEnter(event: any) { console.log("Month Clicked")} 
 
    contextMenuListenerForBooking = (e:any) => {
-
-   
-
     e.preventDefault(); // Prevent the default context menu from appearing
 
     const element = document.getElementById("copyBookingIdListener");
@@ -1557,10 +1556,9 @@ const checkLoadingInterval = setInterval(() => {
                 // @ts-ignore
                 element.style.position = "absolute";
                 // @ts-ignore
-                if( e.pageX > 1100){
-                  element.style.left = e.screenX+60 + "px";
+                if(e.pageX > window.innerWidth - 170){
+                  element.style.left = e.pageX-250 + "px";
                 }else{
-
                   element.style.left = e.pageX + "px";
                 }
                 // @ts-ignore
@@ -2786,7 +2784,7 @@ showResourceOwnerShipModal(requestData:any){
   let endDateTime=requestData.extendedProps.request.endDateTime;
   let resourceName=requestData.extendedProps.request.resourceId?._id ?? requestData.extendedProps.request.controlRoom?._id;
   let participants=requestData.extendedProps.request.participants;
-
+  this.requestBookingId=requestData.extendedProps.request._id;
  
 
   if(!resourceName && participants.every((participant:any) => !participant.studio)){
@@ -2831,90 +2829,12 @@ showResourceOwnerShipModal(requestData:any){
 }
 
 showResourceBookingModal(){
-  this.resourceBookings=[]
-  this.bookingResources=[]
-  this.showAlternateView =false;
 
+this.getCalendarBookingData();
 
-
-
-this.fetchedResources.forEach((resource: any) => {
-  // Find all matching resources in allBookingData
-  const matchingResources = this.allBookingData.filter((booking: any) => booking.resourceId === resource.id);
-
-  // If there are matches, push the data to resourceBookings for each match
-  if (matchingResources.length > 0) {
-    matchingResources.forEach((matchingResource: any) => {
-
-      const existingResourceIndex = this.resourceBookings.findIndex((item: any) => item.id === resource.id);
-
-      if (existingResourceIndex !== -1) {
-        // If the resource already exists, add the booking to the existing entry
-        this.resourceBookings[existingResourceIndex].bookings.push(matchingResource);
-      } else {
-        // If the resource doesn't exist, create a new entry with existing properties
-        this.resourceBookings.push({
-          resourceName: resource.title,
-          id: resource.id,
-          bookings: [
-            matchingResource
-          ],
-        });
-      } 
-    });
-  }
-});
-
-
-this.allBookingData.forEach((booking: any) => {
-  // Find the resource for the current booking
-  const matchingResource = this.fetchedResources.find((resource: any) => resource.id === booking.resourceId);
-  let resourceData;
-  if (matchingResource) {
-
-      if(booking.primaryRequest){
-
-        resourceData=   {
-          ...matchingResource,
-          primaryRequest:1,
-          resourceStatus:booking.status,
-          
-        }
-     
-      }else{
-        resourceData=   {
-          ...matchingResource,
-          secondaryRequest:1,
-          resourceStatus:booking.status,
-        }
-      }
-    
-
-    const existingBookingIndex = this.bookingResources.findIndex((item: any) => item.requestId === booking._id);
-
-    if (existingBookingIndex !== -1) {
-      // If the booking already exists, check if the resource is not already added
-      const existingResourceIndex = this.bookingResources[existingBookingIndex].resources.findIndex((res: any) => res.id === matchingResource.id);
-
-      if (existingResourceIndex === -1) {
-        // If the resource is not present, add it to the existing entry
-        this.bookingResources[existingBookingIndex].resources.push(resourceData);
-      }
-    } else {
-      // If the booking doesn't exist, create a new entry with existing properties
-      this.bookingResources.push({
-        bookingId: booking.extendedProps.request.bookingId ?? "2023-00-00000",
-        requestId: booking._id,
-        status: booking.extendedProps.request.status, // You may want to adjust this based on your data structure
-       
-        resources: [resourceData],
-      });
-    }
-  }
-});
-
-
-
+if(this.allBookingData.length == 0){
+  return;
+}
 
 this.modaleRef = this.modal.open(this.resourceBookingModal, {
   backdrop: "static",
@@ -2926,6 +2846,101 @@ this.modaleRef = this.modal.open(this.resourceBookingModal, {
 
 toggleView() {
   this.showAlternateView = !this.showAlternateView;
+}
+
+getCalendarBookingData(){
+
+  this.resourceBookings=[]
+  this.bookingResources=[]
+  this.showAlternateView =false;
+
+
+
+  this.fetchedResources.forEach((resource: any) => {
+    // Find all matching resources in allBookingData
+    const matchingResources = this.allBookingData.filter((booking: any) => booking.resourceId === resource.id);
+
+    // If there are matches, push the data to resourceBookings for each match
+    if (matchingResources.length > 0) {
+      matchingResources.forEach((matchingResource: any) => {
+
+        const existingResourceIndex = this.resourceBookings.findIndex((item: any) => item.id === resource.id);
+
+        if (existingResourceIndex !== -1) {
+          // If the resource already exists, add the booking to the existing entry
+          this.resourceBookings[existingResourceIndex].bookings.push(matchingResource);
+        } else {
+          // If the resource doesn't exist, create a new entry with existing properties
+          this.resourceBookings.push({
+            resourceName: resource.title,
+            id: resource.id,
+            bookings: [
+              matchingResource
+            ],
+          });
+        } 
+      });
+    }
+  });
+
+
+  this.allBookingData.forEach((booking: any) => {
+    // Find the resource for the current booking
+    const matchingResource = this.fetchedResources.find((resource: any) => resource.id === booking.resourceId);
+    let resourceData;
+    if (matchingResource) {
+
+        if(booking.primaryRequest){
+
+          resourceData=   {
+            ...matchingResource,
+            primaryRequest:1,
+            resourceStatus:booking.status,
+            
+          }
+      
+        }else{
+          resourceData=   {
+            ...matchingResource,
+            secondaryRequest:1,
+            resourceStatus:booking.status,
+          }
+        }
+      
+
+      const existingBookingIndex = this.bookingResources.findIndex((item: any) => item.requestId === booking._id);
+
+      if (existingBookingIndex !== -1) {
+        // If the booking already exists, check if the resource is not already added
+        const existingResourceIndex = this.bookingResources[existingBookingIndex].resources.findIndex((res: any) => res.id === matchingResource.id);
+
+        if (existingResourceIndex === -1) {
+          // If the resource is not present, add it to the existing entry
+          this.bookingResources[existingBookingIndex].resources.push(resourceData);
+        }
+      } else {
+        // If the booking doesn't exist, create a new entry with existing properties
+        this.bookingResources.push({
+          bookingId: booking.extendedProps.request.bookingId ?? "2023-00-00000",
+          requestId: booking._id,
+          status: booking.extendedProps.request.status, // You may want to adjust this based on your data structure
+        
+          resources: [resourceData],
+        });
+      }
+    }
+  });
+
+  if(this.bookingResources.length < 2 ){
+  console.log("IN")
+    this.bookingResourceTitle="Calendar Booking View";
+    
+    }else{
+      console.log("OUT")
+    this.bookingResourceTitle="Calendar Booking(s) View";
+    }
+
+
 }
 
 

@@ -220,7 +220,7 @@
               class="card text-white  mb-3  mx-1"
                style="border-radius:  6px; height: 33px; background-color:#0d8f8f;"
              >
-              <div class="card-body row text-center " style="padding-top: 7px; height: 40px; cursor: pointer; " (click)="showResourceBookingModal()" title="Calendar Booking(s) View">              
+              <div class="card-body row text-center " style="padding-top: 7px; height: 40px; cursor: pointer; " (click)="showResourceBookingModal()" title="{{bookingResourceTitle}}">              
                   <h1 id="pending-requests-count" class="requests-count" style="font-size: 1.1rem; cursor: pointer;">
                    View
                   </h1>  
@@ -681,7 +681,7 @@
    <i
     class="bi bi-eye eyeIcon bg-info me-1"
      (click)="viewRequestDetails(this.requestBookingId)" 
-     
+     title="View Request"
      ></i>
   </div>
 
@@ -736,6 +736,11 @@
 <ng-template #ResourceOwnerShip>
   <div class="modal-header">
     <h5><b>Resource Owners</b></h5>
+    <i
+    class="bi bi-eye eyeIcon bg-info me-1"
+     (click)="viewRequestDetails(this.requestBookingId)" 
+     title="View Request"
+     ></i>
   </div>
 
   <div class="modal-body">
@@ -776,7 +781,7 @@
 
 <ng-template #resourceBookingModal>
   <div class="modal-header">
-    <h5><b>Calendar Booking(s) View</b></h5>
+    <h5><b>{{bookingResourceTitle}}</b></h5>
   </div>
 
   <div *ngIf="showAlternateView">

@@ -2320,7 +2320,7 @@ console.log("here")
               // Extract the date from the requestTimeSlot
               // const requestDate = requestTimeSlot.request.startDateTime.split('T')[0];
               let requestDateString = this.datePipe.transform(requestTimeSlot.request.startDateTime, 'shortDate', this.userTimeZone);
-            console.log(this.guestTimeSlots)
+          
               if(this.guestTimeSlots.length > 0){
 
               // Check if any matching guestTimeSlot with the same date has isAvailable set to false
@@ -2592,7 +2592,7 @@ console.log("here")
         return rts.request
       })
 
-      console.log(data.guestTimeSlots)
+      
 
 
       data.allRequestTimeSlots = this.requestTimeSlots.map((rts: any) => {

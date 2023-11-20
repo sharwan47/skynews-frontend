@@ -648,6 +648,11 @@
 <ng-template #ResourceOwnerShip>
   <div class="modal-header">
     <h5><b>Resource Owners</b></h5>
+    <i
+    class="bi bi-eye bg-info eyeIcon  me-1"
+     (click)="viewRequest(this.requestBookingId)"
+     title="View Request"   
+     ></i>
   </div>
 
   <div class="modal-body">
@@ -695,8 +700,7 @@
    <i
    class="bi bi-eye bg-info eyeIcon  me-1"
     (click)="viewRequest(this.requestBookingId)"
-    title="View Request" 
-   
+    title="View Request"   
     ></i>
   </div>
 
