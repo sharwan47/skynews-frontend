@@ -1,0 +1,253 @@
+<div class="card">
+    <div class="card-body">
+        <div class="px-md-5">
+            <div class="pt-3">
+                <form [formGroup]="requestForm" #formRef="ngForm" enctype="multipart/form-data" novalidate (ngSubmit)="formSubmit()">
+                    <div class="row">
+                       
+                        <div class="col-md-1">
+
+                            <div class="upper_txt py-2">
+                                <label for="inputChannel" class="form-label fw-bold">Ticket Type<span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            </div>
+                            <div class="col-md-2">
+                            <div class="below_txt">
+                                <ng-select bindLabel="name" bindValue="value" id="ticketType"  name="ticketType" formControlName="ticketType">
+                                    <ng-option value="bug (Functional)">Bug (Functional)</ng-option>
+                                    <ng-option value="bug (Cosmetic)">Bug (Cosmetic)</ng-option>
+                                    <ng-option value="change request">Change Request</ng-option>
+                                    
+                                </ng-select>
+                                <small class="text-danger" *ngIf="
+                                            formRef.submitted &&
+                                            requestForm.get('ticketType')?.hasError('required')
+                                          ">Ticket Type is required</small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-1"></div>
+                       
+                        <div class="col-md-1" style="text-align: end;">
+                              <div *ngIf="showTicketIdElement">
+                                <div class="upper_txt py-3">
+                                    <label for="ticketId" class="form-label fw-bold">Ticket Id :<span class="text-danger">*</span></label>
+                                  </div>
+                              </div>                            
+                            </div>
+                            
+                            <div class="col-md-2">
+                                <div *ngIf="showTicketIdElement">
+                                <div class="below_txt">
+                                 
+                                   
+                                    <input
+                                    type="text"
+                                    formControlName="ticketId"
+                                    class="form-control"
+                                    id="ticketId"
+                                    name="ticketId"
+                                   
+                                    style="    color: #1327a4;;
+                                    font-size: 16px;"
+                                    required
+                                  />
+                                  </div>
+                                </div>
+                        </div>
+                        <div class="col-md-5"></div>
+                        <div class="col-md-1">
+
+                            <div class="upper_txt py-4">
+                                <label for="inputChannel" class="form-label fw-bold">Related Menu Tab<span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            </div>
+                            <div class="col-md-2 py-3">
+                            <div class="below_txt">
+                                <ng-select bindLabel="name" bindValue="value" id="related_menu" name="related_menu" formControlName="related_menu">
+                                    <ng-option value="approvals">Approvals</ng-option>
+                                    <ng-option value="calendar">Calendar</ng-option>
+                                    <ng-option value="myBooking">My Bookings</ng-option>
+                                    <ng-option value="schedules">Schedules</ng-option>
+                                    <ng-option value="admin">Admin</ng-option>
+                                    
+                                </ng-select>
+                                <small class="text-danger" *ngIf="
+                                            formRef.submitted &&
+                                            requestForm.get('related_menu')?.hasError('required')
+                                          ">Related Menu is required</small>
+                            </div>
+                        </div>
+                        <div class="col-md-9"></div>
+                        <!-- <div class="col-md-1">
+
+                            <div class="upper_txt py-2">
+                                <label for="relatedArea" class="form-label fw-bold">Related Area<span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            </div> -->
+                            <!-- <div class="col-md-2">
+                            <div class="below_txt">
+                                <ng-select bindLabel="name" bindValue="value" id="relatedArea" name="relatedArea" formControlName="relatedArea">
+                                    <ng-option value="high">Bug - High Priority</ng-option>
+                                    <ng-option value="medium">Bug - Medium Priority</ng-option>
+                                    <ng-option value="low">Bug - Low Priority</ng-option> -->
+                                    <!-- <ng-option value="highPriority">Bug Fix in Progress</ng-option> -->
+                                   
+                               
+                                <!-- </ng-select>
+                                <small class="text-danger" *ngIf="
+                                            formRef.submitted &&
+                                            requestForm.get('relatedArea')?.hasError('required')
+                                          ">Related Area is required</small>
+                            </div>
+                        </div>
+                        <div class="col-md-9"></div>                      -->
+                        <!-- <div class="col-md-1">
+
+                            <div class="upper_txt py-3">
+                                <label for="subject" class="form-label fw-bold">Subject<span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            </div>
+                            <div class="col-md-2 py-2">
+                            <div class="below_txt">
+                                <input
+                                type="text"
+                                formControlName="subject"
+                                class="form-control"
+                                id="subject"
+                                name="subject"
+                                required
+                              />
+                                <small class="text-danger" *ngIf="
+                                            formRef.submitted &&
+                                            requestForm.get('subject')?.hasError('required')
+                                          ">Subject is required</small>
+                            </div>
+                        </div>
+                        <div class="col-md-9 "></div>   -->
+                        
+                        <div class=" col-md-3 ">
+                            <div class="py-4">
+                                <div class="form-group">
+                                    <div>
+                                        <label for="subject" class="form-label fw-bold" >Subject<span
+                                            class="text-danger">*</span></label>
+                                         </div>
+                                  
+                                    <div>
+                                        <input
+                                        type="text"
+                                        formControlName="subject"
+                                        class="form-control"
+                                        id="subject"
+                                        name="subject"
+                                        required
+                                      />
+                                      <small class="text-danger" *ngIf="
+                                      formRef.submitted &&
+                                      requestForm.get('subject')?.hasError('required')
+                                    ">Subject is required</small>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+
+
+                        <label for="details" class="fw-bold my-2">Add Details Describing The Issue
+                            <span class="text-danger">*</span></label>
+                        <textarea formControlName="details" id="details" id="name" class="form-control" rows="10" style="margin-left: 10px;"
+                            required></textarea>
+                        <small class="text-danger" *ngIf="
+                                formRef.submitted &&
+                                requestForm.get('details')?.hasError('required')
+                              ">Details is required</small>
+
+
+                        <div class="d-flex">
+                            <div class="py-5">
+                                <div class="form-group">
+                                    <div>
+                                        <label for="attachment" class="form-label fw-bold">Attach any supporting
+                                            images</label>
+                                        <i role="button" (click)="removeAttachment($event)" id="remove_attachment"
+                                            class="float-end bi bi-trash" *ngIf="attachmentSet"></i>
+                                    </div>
+                                    <input type="file" formControlName="attachment" name="attachment" class="form-contorl d-none"
+                                        id="attachment" #attachment (change)="onAttachmentSelected($event)" />
+                                    <div>
+                                        <div role="button" (click)="attachment.click()"
+                                            class="text-center bg-main-color border d-inline-block p-5 rounded-3 cursor-pointer">
+                                            <i class="bi bi-file-earmark-plus"></i>
+                                            <p class="mt-2" id="attachment_name">
+                                                {{ attachmentName }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stepper-actions py-5 text-center">
+                        <button type="button" class="btn btn-success btn-lg mx-3"[disabled]="!showRefreshButton" (click)="refreshForm()"  >
+                            <span class="mx-3 text-white"> Refresh </span>
+                        </button>
+                        <button  class="btn btn-primary btn-lg"    [disabled]="!requestForm.valid"  >
+                            <span class="mx-3 text-white"> Submit </span>
+                        </button>
+                      
+                        <!-- [disabled]="!showSubmitButton" -->
+                    </div>
+                    <!-- <div class="stepper-actions py-5 text-center">
+                        <button class="btn btn-success btn-lg" [hidden]="!showRefreshButton" (click)="refreshForm()"  >
+                            <span class="mx-3 text-white"> Refresh </span>
+                        </button>
+                    </div> -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #submitModal let-modal3>
+    <div class="modal-body">
+        <h5>
+            Thank you for submitting a support Ticket <hr> The Support Ticket Id is: {{uuid}}<br /><br />
+
+            An email has been sent to you and to the support team with the details of this case.
+            <br />
+            A Triage session will determine the nature of this ticket as per below points:
+            <br />
+            <br />
+            1 - A bug<br />
+            2 - An Enhancement<br />
+            3 - A normal system behavior <br />
+        </h5>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal3.close()">
+            Close
+        </button>
+    </div>
+</ng-template>
+
+
+<ng-template #FileSizeExceeded let-modal5 > 
+   
+    <div class="modal-header textCenter" >
+      <h5 class="modal-title ">Attachment Size Exceeded </h5>     
+    </div>
+    <div class="modal-footer justSty ">
+      <div class="modal-body "  >
+        <h5 style="margin-top:-20px">File is too large. Please select a file smaller than 10 MB.</h5>
+      </div>
+       <button type="button" class="btn btn-success btn-lg text-white " (click)="modal5.close()" >
+         Ok
+        </button>   
+    </div>   
+  </ng-template>

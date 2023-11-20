@@ -1,0 +1,80 @@
+{
+  "ocurrenceOptions": {
+    "eventType": "single",
+    "pattern": "daily",
+    "patternValue": 1,
+    "recurrenceValue": null,
+    "requestEndCriteria": "date",
+    "occurrenceTurns": 1
+  },
+  "_id": "64e2cc7df41e95b27ec05466",
+  "requestedBy": {
+    "id": "64b73b53e6adcda7be740ba6",
+    "name": "Jay Lord Torres"
+  },
+  "approvals": [
+    {
+      "user": { "id": "63dd24562e7fde4af002db5b", "name": "in2networks" },
+      "resource": {
+        "id": "63d05f29672230875d214cc3",
+        "name": "Mac Park Studio 3"
+      },
+      "approvalTimestamp": null,
+      "approvalType": "manual",
+      "status": "pending",
+      "note": null
+    },
+    {
+      "user": { "id": "63e99dc9c2c0e3c6f41cd07c", "name": "Patrick Newbery" },
+      "resource": {
+        "id": "63d05f29672230875d214cc3",
+        "name": "Mac Park Studio 3"
+      },
+      "approvalTimestamp": null,
+      "approvalType": "manual",
+      "status": "pending",
+      "note": null
+    },
+    {
+      "user": { "id": "6466ba04b189127223f6bcdc", "name": "Brodie Wright" },
+      "resource": {
+        "id": "63d05f29672230875d214cc3",
+        "name": "Mac Park Studio 3"
+      },
+      "approvalTimestamp": null,
+      "approvalType": "manual",
+      "status": "pending",
+      "note": null
+    },
+    {
+      "user": { "id": "6467d94eeceac441c3f0e6fb", "name": "Mark Austin" },
+      "resource": {
+        "id": "63d05f29672230875d214cc3",
+        "name": "Mac Park Studio 3"
+      },
+      "approvalTimestamp": null,
+      "approvalType": "manual",
+      "status": "pending",
+      "note": null
+    }
+  ],
+  "resourceId": {
+    "_id": "63d05f29672230875d214cc3",
+    "name": "Mac Park Studio 3"
+  },
+  "requestType": "live",
+  "status": "pending",
+  "requestDateTime": "2023-08-21T17:00:00.000Z",
+  "startDateTime": "2023-08-21T17:00:00.000Z",
+  "endDateTime": "2023-08-21T18:00:00.000Z",
+  "details": "test",
+  "channel": { "_id": "639ff993d2806ccb9a122d3b", "name": "Sky News" },
+  "name": "test booking 1",
+  "attachment": null,
+  "participants": [
+    { "name": "test", "type": "host", "studio": "63d05f29672230875d214cc3" }
+  ],
+  "deleted": false,
+  "createdAt": "2023-08-21T02:31:25.201Z",
+  "updatedAt": "2023-08-21T02:31:25.201Z"
+}

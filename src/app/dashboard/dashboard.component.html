@@ -1,0 +1,928 @@
+<div class="">
+  <div class="">
+    <div class="options py-4">
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="d-flex flex-row">
+            <div class="p-2 bd-highlight">
+              <div class="form-check approved">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  (click)="filterByStatus($event)"
+                  value="approved"
+                  id="approvedCheck"
+                  checked="true"
+                />
+                <label class="form-check-label" for="approvedCheck">
+                  Approved
+                </label>
+              </div>
+            </div>
+            <div class="p-2 bd-highlight">
+              <div class="form-check pending">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  (click)="filterByStatus($event)"
+                  value="pending"
+                  id="requestCheck"
+                  checked
+                />
+                <label class="form-check-label" for="requestCheck">
+                  Pending
+                </label>
+              </div>
+            </div>
+            <div class="p-2 bd-highlight">
+              <div class="form-check rejected">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  (click)="filterByStatus($event)"
+                  value="rejected"
+                  id="rejectCheck"
+                  checked
+                />
+                <label class="form-check-label" for="rejectCheck">
+                  Rejected
+                </label>
+              </div>
+            </div>
+            <div class="p-2 bd-highlight">
+              <div class="form-check myrequest">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  (click)="setMyRequestsOnly($event)"
+                  id="myrequest"
+                />
+                <label class="form-check-label" for="myrequest">
+                  My Requests only
+                </label>
+              </div>
+            </div>
+            <div class="p-2 bd-highlight">
+              <div class="form-check myrequest">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  (click)="getFilterRequestOnly()"
+                  id="myrequest"
+                />
+                <label class="form-check-label" for="myrequest">
+                  Get Filter Request
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div class="row d-flex d-sm-none">
+            <div class="col-md-12">
+              <ul class="nav justify-content-evenly">
+                
+                <li class="nav-item ms-1 mt-1">
+                  <button
+                    type="button"
+                    class="btn btn-secondary btn-fill bg-main-color border-mc text-black"
+                    (click)="openFilterModal(resourceFilter)"
+                  >
+                    <span class="d-none d-sm-block"> Filter </span>
+                    <i class="bi bi-filter"></i>
+                  </button>
+                </li>
+                <li
+                  class="nav-item ms-1 mt-1"
+                  *ngIf="['CREATE_REQUEST'] | auth"
+                >
+                  <button
+                    class="btn btn-success btn-fill text-white"
+                    [routerLink]="['/request', 'new']"
+                  >
+                    <a>
+                      <span class="d-none d-sm-block"> </span>
+                      <i class="bi bi-plus-lg"></i>
+                    </a>
+                  </button>
+                </li>
+                <li class="nav-item ms-1 mt-1">
+                  <div class="dropdown">
+                    <button
+                      class="btn btn-outline-secondary dropdown-toggle"
+                      type="button"
+                      id="dropdownMenuButton1"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <span id="calendar_type">{{ viewType }}</span>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenuButton1"
+                    >
+                      <li>
+                        <a
+                          class="dropdown-item cursor-pointer"
+                          (click)="changeView('dayGridMonth')"
+                          >Monthly</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item cursor-pointer"
+                          (click)="changeView('timeGridWeek')"
+                          >Weekly</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item cursor-pointer"
+                          (click)="changeView('resourceTimeGridDay')"
+                          >Daily</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="nav-item ms-1 mt-1">
+                  <div class="dropdown time-slots">
+                    <button
+                      class="btn btn-outline-secondary dropdown-toggle"
+                      type="button"
+                      id="dropdownMenuButton1"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <span class="time_slots"
+                        >Time Scale: {{ selectedTimeSlot }}</span
+                      >
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenuButton1"
+                    >
+                      <li *ngFor="let timeSlot of timeSlots">
+                        <a
+                          class="dropdown-item"
+                          (click)="setTimeSlot(timeSlot)"
+                          >{{ timeSlot }}</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+              <hr />
+            </div>
+          </div>
+          <div class="row">
+           
+            <div class="col-md-4"></div>         
+            <div class="col-md-8"> 
+              <ul class="nav justify-content-end calendar-options d-none d-md-flex dhide" >
+              
+                <div 
+                class="card text-white bg-primary bg-gr-primary mb-3  mx-2"
+                 style=" width:70px;   border-radius:  6px; height: 33px; "
+               >
+              
+                <div class="card-body row text-center " style="padding-top: 6px; height: 40px; ">              
+                    <h1 id="pending-requests-count" class="requests-count" style="font-size: 1.3rem;">
+                    {{pendingRequest}}
+                    </h1>               
+                </div>
+              </div>
+                <div  
+                class="card text-white bg-success bg-gr-success mb-3  mx-1"
+                 style=" width:70px;    border-radius:  6px; height: 33px;"
+               >
+                <div class="card-body row text-center " style="padding-top: 6px; height: 40px; ">              
+                    <h1 id="pending-requests-count" class="requests-count" style="font-size: 1.3rem;">
+                    {{approvedRequest}}
+                    </h1>               
+                </div>
+              </div>
+                <div  
+                class="card text-white bg-danger bg-gr-danger mb-3  mx-1"
+                 style=" width:70px;   border-radius:  6px; height: 33px;"
+               >
+                <div class="card-body row text-center " style="padding-top: 6px; height: 40px; ">              
+                    <h1 id="pending-requests-count" class="requests-count" style="font-size: 1.3rem;">
+                    {{rejectedRequest}}
+                    </h1>               
+                </div>
+              </div>
+
+              <div  
+              class="card text-white  mb-3  mx-1"
+               style="border-radius:  6px; height: 33px; background-color:#0d8f8f;"
+             >
+              <div class="card-body row text-center " style="padding-top: 7px; height: 40px; cursor: pointer; " (click)="showResourceBookingModal()" title="Calendar Booking(s) View">              
+                  <h1 id="pending-requests-count" class="requests-count" style="font-size: 1.1rem; cursor: pointer;">
+                   View
+                  </h1>  
+                               
+              </div>
+            </div>
+           
+
+                <li class="nav-item">
+                  <i
+                    class="bi bi-bootstrap-reboot btn rounded-circle text-white mx-2"
+                    [ngClass]="{
+                      'btn-primary': isAllToggled('') == false,
+                      'btn-secondary': isAllToggled('') == true
+                    }"
+                    (click)="allfilter()"
+                  ></i>
+                </li>
+                <li class="nav-item ms-1">
+                  <button
+                    type="button"
+                    class="btn btn-secondary btn-fill bg-main-color border-mc text-black"
+                    (click)="openFilterModal(resourceFilter)"
+                  >
+                    Filter
+                    <i class="bi bi-filter"></i>
+                  </button>
+                </li>
+                <li class="nav-item ms-1" *ngIf="['CREATE_REQUEST'] | auth">
+                  <button
+                    class="btn btn-success btn-fill text-white"
+                    [routerLink]="['/request', 'new']"
+                  >
+                    <a
+                      >New Request
+                      <i class="bi bi-plus-lg"></i>
+                    </a>
+                  </button>
+                </li>
+                <li class="nav-item ms-1">
+                  <div class="dropdown">
+                    <button
+                      class="btn btn-outline-secondary dropdown-toggle"
+                      type="button"
+                      id="dropdownMenuButton1"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <span id="calendar_type">{{ viewType }}</span>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenuButton1"
+                    >
+                      <li>
+                        <a
+                          class="dropdown-item cursor-pointer"
+                          (click)="changeView('dayGridMonth')"
+                          >Monthly</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item cursor-pointer"
+                          (click)="changeView('timeGridWeek')"
+                          >Weekly</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item cursor-pointer"
+                          (click)="changeView('resourceTimeGridDay')"
+                          >Daily</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="nav-item ms-1">
+                  <div class="dropdown time-slots">
+                    <button
+                      class="btn btn-outline-secondary dropdown-toggle"
+                      type="button"
+                      id="dropdownMenuButton1"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <span class="time_slots"
+                        >Time Scale {{ selectedTimeSlot }}</span
+                      >
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenuButton1"
+                    >
+                      <li *ngFor="let timeSlot of timeSlots">
+                        <a
+                          class="dropdown-item"
+                          (click)="setTimeSlot(timeSlot)"
+                          >{{ timeSlot }}</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+              <div
+                class="dropdown justify-content-end calendar-options d-none d-sm-flex d-md-none dshow"
+              >
+              <div 
+                class="card text-white bg-primary bg-gr-primary mb-3  mx-2"
+                 style=" width:70px;   border-radius:  6px; height: 33px; "
+               >
+                <div class="card-body row text-center " style="padding-top: 6px; height: 40px; ">              
+                    <h1 id="pending-requests-count" class="requests-count" style="font-size: 1.3rem;">
+                    {{pendingRequest}}
+                    </h1>               
+                </div>
+              </div>
+                <div  
+                class="card text-white bg-success bg-gr-success mb-3  mx-1"
+                 style=" width:70px;    border-radius:  6px; height: 33px;"
+               >
+                <div class="card-body row text-center " style="padding-top: 6px; height: 40px; ">              
+                    <h1 id="pending-requests-count" class="requests-count" style="font-size: 1.3rem;">
+                    {{approvedRequest}}
+                    </h1>               
+                </div>
+              </div>
+                <div  
+                class="card text-white bg-danger bg-gr-danger mb-3  mx-1"
+                 style=" width:70px;   border-radius:  6px; height: 33px;"
+               >
+                <div class="card-body row text-center " style="padding-top: 6px; height: 40px; ">              
+                    <h1 id="pending-requests-count" class="requests-count" style="font-size: 1.3rem;">
+                    {{rejectedRequest}}
+                    </h1>               
+                </div>
+              </div>
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  id="respDropDownMenu"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  style="height: 34px;"
+                >
+                  <span id="calendar_options">Options</span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="respDropDownMenu">
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      (click)="openFilterModal(resourceFilter)"
+                      >Filter</a
+                    >
+                  </li>
+                  <li
+                    [routerLink]="['/request', 'new']"
+                    *ngIf="['CREATE_REQUEST'] | auth"
+                  >
+                    <a class="dropdown-item">New Request</a>
+                  </li>
+                  <li>
+                    <hr class="dropdown-divider" />
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item cursor-pointer"
+                      (click)="changeView('dayGridMonth')"
+                      >Monthly</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item cursor-pointer"
+                      (click)="changeView('timeGridWeek')"
+                      >Weekly</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item cursor-pointer"
+                      (click)="changeView('resourceTimeGridDay')"
+                      >Daily</a
+                    >
+                  </li>
+                  <li>
+                    <hr class="dropdown-divider" />
+                  </li>
+                  <li class="time-slots no-dropdown"></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="eventWrapper">
+
+            <div id="ec"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #resourceFilter let-modal>
+  <!-- <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Resource Filter</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div> -->
+  <div class="modal-body p-5">
+    <div
+      class="w-100 mb-2"
+      *ngIf="
+        userDetails &&
+        userDetails.preferences &&
+        !userDetails.preferences.resourceFilters.length
+      "
+    >
+      <span
+        style="white-space: normal"
+        class="badge bg-warning bg-opacity-25 border text-black"
+      >
+        Please select and save the desired resources which will be save in your
+        profile for your preferences
+      </span>
+    </div>
+    <h1 class="text-center mt-2 mb-5">Calendar Filter</h1>
+    <div class="row mx-3 g-3">
+      <div class="col-md-6 form-check">
+        <input
+          class="form-check-input resource-filter"
+          type="checkbox"
+          value=""
+          id="1"
+          [checked]="isAllToggled('')"
+          (change)="toggleAllResources('', $event)"
+        />
+        <label class="form-check-label" for="flexCheckDefault">
+          Toggle All Resources
+        </label>
+      </div>
+    </div>
+    <div *ngIf="resources">
+      <ng-container *ngFor="let t of resourceTypes">
+        <ng-container *ngIf="hasResources(t)">
+          <hr />
+          <h4>{{ t.name }}</h4>
+          <div class="row mx-3 mb-2">
+            <div class="form-check">
+              <input
+                class="form-check-input resource-filter"
+                type="checkbox"
+                value=""
+                id="1"
+                [checked]="isAllToggled(t._id)"
+                (change)="toggleAllResources(t._id, $event)"
+              />
+              <label class="form-check-label" for="flexCheckDefault">
+                All
+              </label>
+            </div>
+          </div>
+          <div class="row mx-3 g-3">
+            <ng-container *ngFor="let r of resources">
+              <ng-container *ngIf="r.type == t._id">
+                <div class="col-md-4 col-sm-6 form-check">
+                  <input
+                    class="form-check-input resource-filter"
+                    type="checkbox"
+                    value=""
+                    id="{{ r._id }}"
+                    [checked]="r.checked"
+                    (change)="toggleResource(r, $event)"
+                  />
+                  <label class="form-check-label" for="flexCheckDefault">
+                    {{ r.name }}
+                  </label>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+        </ng-container>
+      </ng-container>
+      <br />
+      <div class="text-center">
+        <button
+          type="button"
+          class="btn btn-lg btn-outline-secondary mx-2 px-5"
+          (click)="cancelFilterResource()"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-lg btn-primary mx-2 px-5"
+          (click)="filterSaveByResources()"
+        >
+          Filter
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="modal-footer">
+    <button type="button" class="btn btn-primary me-auto" (click)="filterSaveByResources()">
+      Filter & Save
+    </button>
+    <button type="button" class="btn btn-secondary" (click)="cancelFilterResource()">
+      Cancel
+    </button>
+    <button type="button" class="btn btn-primary" (click)="filterSaveByResources()">
+      Filter
+    </button>
+  </div> -->
+</ng-template>
+
+<ng-template #RequestCreatedModalContent let-modal5 >
+  
+  <div class="modal-header" *ngIf="isCreated">
+    <h5>Your New Booking Id: {{bookingId}}</h5>
+    <div class="clone" id="copyBookingId" title="Copy"  (click)="copyBookingIdToClipboard()">
+      <i [class]="copiedClass" ></i>
+    </div>
+   
+  </div>
+  <div class="modal-header" *ngIf="isUpdated">
+    <h5 class="modal-title">Your Edited Booking Id: {{bookingId}} </h5>
+    <div class="clone" id="copyBookingId" title="Copy" (click)="copyBookingIdToClipboard()">
+      <i [class]="copiedClass"  ></i>
+    </div>
+  </div>
+  <div class="modal-footer justSty ">
+    <div class="modal-body"  *ngIf="showFilterStatus">
+      <h5 style="margin-top:-20px">Please adjust your filter to include the main Resource ({{resourceName }}) so that you can see your new booking on the calendar.</h5>
+    </div>
+     <button type="button" class="btn btn-success btn-lg text-white " (click)="closeModal()" >
+       Ok
+      </button>   
+  </div> 
+
+</ng-template>
+
+<!--  This is the blue print for the event options, do not remove it  -->
+<div class="ec-options d-none" id="ec-options">
+  <div class="view" id="ec-options__delete">
+    <i class="bi bi-trash3"></i>
+  </div>
+
+  <div class="clone" id="ec-options__clone" title="Copy">
+    <i class="bi bi-stack"></i>
+  </div>
+
+  <div class="edit" id="ec-options__edit">
+    <i class="bi bi-pencil-square"></i>
+  </div>
+  <div class="view" id="ec-options__view">
+    <i class="bi bi-eye"></i>
+  </div>
+  <div class="copyBookingId" id="ec-options__copy">
+    <i [class]="copiedBookingClass" title="Copy Booking Id"></i>
+  </div>
+
+</div>
+
+<!-- Event Month view  -->
+<ng-template #eventMonthTemplate let-e>
+  <div>
+    <div>
+      <span
+        class="this.ec-dot"
+        [style.backgroundColor]="e.backgroundColor"
+      ></span>
+      {{ e.startString }} to {{ e.endString }}
+    </div>
+    <div>
+      <span>
+        {{ e.resourceName }}
+      </span>
+      <span> By: {{ e.requesteBy.name }} </span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #confirmModalContent let-modal>
+  <div class="modal-body">
+    <h5>Are you sure?</h5>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-warning" (click)="deleteRequest()">
+      Delete
+    </button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close()">
+      Cancel
+    </button>
+  </div>
+</ng-template>
+
+<div id="contextMenu" class="context-menu" style="display: none">
+  <ul
+    class="dropdown-menu show overflow-hidden"
+    aria-labelledby="dropdownMenuButton1"
+  >
+    <li>
+      <a
+        class="dropdown-item text-secondary cursor-pointer create-request-action"
+        (click)="addRequest()"
+        [ngClass]="{ '': !(['CREATE_REQUEST'] | auth) }"
+      >Click to create request</a>
+    </li>
+  </ul>
+</div>
+
+
+<div id="copyBookingIdListener" class="context-menu" style="display: none">
+  <ul
+  class="dropdown-menu show overflow-hidden"
+  aria-labelledby="dropdownMenuButton1"
+   style="display: flex;width:270px;">
+ <li><button type="button" class="btn  cursor-pointer btn-sm text-white btnCss mx-2" 
+        [ngClass]="{
+          'btn-primary': requestStatus === 'pending',
+          'btn-success': requestStatus === 'approved',
+          'btn-danger': requestStatus === 'rejected'
+        }"
+          title="View resource time matrix" (click)="copyBookingIdNew(copyRequestId)" title="Copy Booking Id" style="padding: 4px 7px 6px 7px;
+          height: 26px;">
+            <b>{{copyRequestId ?? "2023-00-00000"}}</b>
+            </button></li> 
+  <li><button type="button" class="btn btn-success cursor-pointer btn-sm text-white  mx-2  "
+          title="View resource time matrix" (click)="showResourceModal(bookingData)" style="height:26px;">
+           <span>
+            <b>View</b>
+          </span>
+  </button></li>
+  <li><button type="button" class="btn btn-success cursor-pointer btn-sm text-white  mx-2  bgBlue"
+          title="View resource ownership" (click)="showResourceOwnerShipModal(bookingData)" style="height:26px;">
+           <span>
+            <b>Owner</b>
+          </span>
+  </button></li>
+    <!-- <li>
+      <a
+        class="dropdown-item text-secondary cursor-pointer "
+        (click)="copyBookingIdNew(copyRequestId)"
+
+      >Copy Booking Id : <b>{{copyRequestId}}</b> </a>
+    </li> -->
+  </ul>
+</div>
+
+<ng-template #RequestAutoApprovalStatus >
+  <div class="modal-header">
+    <h5><b>Resource Time Matrix</b>
+      <ng-container *ngIf="isRecurring == true" >
+        <i title="Recurring Booking" class="bi bi-r-circle mx-1 my-1" style="font-size: larger; -webkit-text-stroke: 0.5px; padding-left: 3px;"></i>
+      </ng-container>
+   </h5>  
+   <i
+    class="bi bi-eye eyeIcon bg-info me-1"
+     (click)="viewRequestDetails(this.requestBookingId)" 
+     
+     ></i>
+  </div>
+
+  <div class="modal-body">
+    <table class="table table-striped">
+      <thead>
+        <tr >
+          <th >Type</th>
+          <th style="text-align-last: center; width: 20%;">Resource</th>
+          <th class="modalAutoCss"><span class="text-danger">(Auto) </span> <span >From</span>&nbsp;</th>
+          <th style="text-align-last: center;">To</th>
+          <th style="text-align-last: center;">Status</th>
+          <th class="modalAutoCss"><span class="text-danger">(Booking) </span> <span >From</span>&nbsp;</th>
+          <th style="text-align-last: center;">To</th>
+          <th style="text-align-last: center;">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let resource of resourceData.newData" [ngClass]="{'bold-row': resource.id === selectedResourceId}" >
+          <td>{{capitalizeFirstLetter(resource.type) }}</td>
+          <td style="text-align-last: center;">{{ resource.name }}</td>
+         
+          <td style="text-align-last: right;" >{{ resource.autoStartTime }}</td>
+          <td style="text-align-last: center;">{{ resource.autoEndTime }}</td>
+          <td style="text-align-last: center;">
+           
+            <div> <span *ngIf="resource.autoApprovalStatus === 0"><i class="fa-solid fa-a autoApprovalDisabled "></i> </span> </div>
+            <div><span *ngIf="resource.autoApprovalStatus === 1"> <i class="fa-solid fa-a autoApproval "></i></span></div> 
+            <div> <span *ngIf="resource.autoApprovalStatus === 2"> <i class="fa-solid fa-a autoApprovalPending "></i></span></div>
+          </td>
+         
+          <td style="text-align-last: right;" >{{ resource.startTime }}</td>
+          <td style="text-align-last: center;">{{ resource.endTime }}</td>
+          <td style="text-align-last: center;">
+            <span class="badge bg-primary"  *ngIf="resource.status == 'pending'">Pending</span>
+            <span class="badge bg-success"  *ngIf="resource.status == 'approved'">Approved</span>
+            <span class="badge bg-danger"  *ngIf="resource.status == 'rejected'">Rejected</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="modal-footer justSty">
+    <div class="modal-body"></div>
+    <button type="button" class="btn btn-success btn-lg text-white" (click)="closeModal()">
+      Ok
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #ResourceOwnerShip>
+  <div class="modal-header">
+    <h5><b>Resource Owners</b></h5>
+  </div>
+
+  <div class="modal-body">
+    <div style="overflow-x: auto;">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Resource</th>
+            <th>Owners</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div style="max-height: 300px; overflow-y: scroll;">
+      <table class="table table-striped">
+        <tbody>
+          <tr *ngFor="let resource of resourceOwnerData | keyvalue">
+            <td>{{ resource.key }}</td>
+            <td>
+              <ul>
+                <li *ngFor="let owner of resource.value">{{ owner }}</li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="modal-footer justSty">
+    <div class="modal-body"></div>
+    <button type="button" class="btn btn-success btn-lg text-white" (click)="closeModal()">
+      Ok
+    </button>
+  </div>
+</ng-template>
+
+
+<ng-template #resourceBookingModal>
+  <div class="modal-header">
+    <h5><b>Calendar Booking(s) View</b></h5>
+  </div>
+
+  <div *ngIf="showAlternateView">
+   <div class="modal-body">
+    <div style="overflow-x: auto;">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th style="width:40%">Booking Id</th>
+            <th style="width:28%">Resource</th>
+            <th>Resource Position</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div style="max-height: 300px; overflow-y: scroll;">
+      <table class="table table-striped">
+        <tbody>
+          <tr *ngFor="let booking of bookingResources">
+            <td style="width:35%">
+              <span class="badge bg-primary"  *ngIf=" booking.status == 'pending'">{{ booking.bookingId ?? "2023-00-00000"}}</span>
+              <span class="badge bg-success"  *ngIf=" booking.status == 'approved'">{{ booking.bookingId ?? "2023-00-00000"}}</span>
+              <span class="badge bg-danger"  *ngIf=" booking.status == 'rejected'">{{ booking.bookingId?? "2023-00-00000"}}</span>
+
+            </td>
+            <td style="width:40%">
+              <ul style="list-style-type: none;">
+                <li *ngFor="let booking of booking.resources">                
+                 {{ booking.title}}                 
+                </li>
+              </ul>
+            </td> 
+            <td>
+              <span *ngFor="let resource of booking.resources">
+                <i class="fa-solid bookingResourcePrimary fa-p mx-1"
+                   *ngIf="resource.primaryRequest && booking.resources.length > 1 "
+                   [ngClass]="{
+                     'bg-primary': resource.resourceStatus === 'pending',
+                     'bg-success': resource.resourceStatus === 'approved',
+                     'bg-danger': resource.resourceStatus === 'rejected'
+                   }"></i>
+                <i class="fa-solid fa-s mx-1 bookingResourceSecondary"
+                   *ngIf="resource.secondaryRequest "
+                   [ngClass]="{
+                     'bg-primary': resource.resourceStatus === 'pending',
+                     'bg-success': resource.resourceStatus === 'approved',
+                     'bg-danger': resource.resourceStatus === 'rejected'
+                   }"></i>
+                <i class="fa-solid bookingResourcePrimaryOnly fa-p mx-1"
+                   *ngIf="resource.primaryRequest && booking.resources.length == 1"
+                   [ngClass]="{
+                     'bg-primary': resource.resourceStatus === 'pending',
+                     'bg-success': resource.resourceStatus === 'approved',
+                     'bg-danger': resource.resourceStatus === 'rejected'
+                   }"></i>
+                <br>
+              </span>
+            </td>        
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  </div>
+
+  <div *ngIf="!showAlternateView">
+  <div class="modal-body">
+    <div style="overflow-x: auto;">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th style="width:40%">Resource</th>
+            <th style="width:28%">Booking Id</th>
+            <th>Resource Position</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div style="max-height: 300px; overflow-y: scroll;">
+      <table class="table table-striped">
+        <tbody>
+          <tr *ngFor="let resource of resourceBookings">
+            <td style="width:35%">{{ resource.resourceName }}</td>
+            <td style="width:40%">
+              <ul style="list-style-type: none;">
+                <li *ngFor="let booking of resource.bookings">
+                  <span class="badge bg-primary"  *ngIf=" booking.extendedProps.request.status == 'pending'">{{ booking.extendedProps.request.bookingId ?? "2023-00-00000"}}</span>
+                  <span class="badge bg-success"  *ngIf=" booking.extendedProps.request.status == 'approved'">{{ booking.extendedProps.request.bookingId ?? "2023-00-00000"}}</span>
+                  <span class="badge bg-danger"  *ngIf=" booking.extendedProps.request.status == 'rejected'">{{ booking.extendedProps.request.bookingId ?? "2023-00-00000"}}</span>
+                </li>
+              </ul>
+            </td>
+            <td>
+
+              <span *ngFor="let booking of resource.bookings">
+                <i 
+                class="fa-solid bookingResourcePrimary fa-p mx-1 " 
+                
+                *ngIf="booking.extendedProps?.primaryRequest && booking.extendedProps.request.participants.length > 0 " 
+                [ngClass]="{
+                  'bg-primary':booking.extendedProps.request.status == 'pending',
+                  'bg-success':booking.extendedProps.request.status == 'approved',
+                  'bg-danger': booking.extendedProps.request.status == 'rejected'
+                }"
+                ></i>
+                <i 
+                class="fa-solid fa-s mx-1 bookingResourceSecondary"
+               
+                 *ngIf="booking.extendedProps?.secondaryRequest"
+                 [ngClass]="{
+                  'bg-primary':booking.extendedProps.request.status == 'pending',
+                  'bg-success':booking.extendedProps.request.status == 'approved',
+                  'bg-danger': booking.extendedProps.request.status == 'rejected'
+                }"
+                 ></i>
+                <i
+                 class="fa-solid bookingResourcePrimaryOnly fa-p mx-1"
+         
+                 *ngIf="booking.extendedProps?.primaryRequest && booking.extendedProps.request.participants.length == 0"
+                 [ngClass]="{
+                'bg-primary':booking.extendedProps.request.status == 'pending',
+                  'bg-success':booking.extendedProps.request.status == 'approved',
+                  'bg-danger': booking.extendedProps.request.status == 'rejected'
+                }"
+                 ></i>
+                 <br>
+              </span>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  </div>
+
+  <div class="modal-footer justSty">
+    <div class="modal-body">
+      <button type="button" class="btn btn-dark btn-lg text-white" (click)="toggleView()">
+        Shuffle
+      </button>
+    </div>
+    <button type="button" class="btn btn-success btn-lg text-white" (click)="closeModal()">
+      Ok
+    </button>
+  </div>
+</ng-template>
+
+<ngx-spinner [fullScreen]="true" type="ball-scale-multiple"></ngx-spinner>
