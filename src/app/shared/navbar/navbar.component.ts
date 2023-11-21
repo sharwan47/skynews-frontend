@@ -29,6 +29,7 @@ export class NavbarComponent implements OnInit {
 	upgradeVersion:boolean=false;
 	updateSchemaBtn:boolean= false;
 	// userTimeZone: any;
+	userAuthorities: string[] = [];
 	subscriptions = new Subscription();
 	public name$!: Observable<string>;
 
@@ -99,7 +100,22 @@ export class NavbarComponent implements OnInit {
 		this.userName = staticUser.user.name;
 		this.name$=of(staticUser.user.name);
 
+		this.authService.authorities$.subscribe({
+			next: (authorities: any) => {
+			  this.userAuthorities = authorities;
+			  console.log(authorities);
+			},
+			error: (error:any) => {
+			  console.error('Error fetching user authorities:', error);
+			}
+		  });
+		  
+
 	}
+
+	checkAuthority(authority: string): boolean {
+		return this.userAuthorities.includes(authority);
+	  }
 
 	listenToNewRequests() {
 		// Enable pusher logging - don't include this in production

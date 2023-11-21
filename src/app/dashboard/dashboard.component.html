@@ -331,17 +331,17 @@
                 class="dropdown justify-content-end calendar-options d-none d-sm-flex d-md-none dshow"
               >
               <div 
-                class="card text-white bg-primary bg-gr-primary mb-3  mx-2"
+                class="card text-white bg-primary bg-gr-primary mb-3  mx-2 iconHide"
                  style=" width:70px;   border-radius:  6px; height: 33px; "
                >
-                <div class="card-body row text-center " style="padding-top: 6px; height: 40px; ">              
+                <div class="card-body row text-center  " style="padding-top: 6px; height: 40px; ">              
                     <h1 id="pending-requests-count" class="requests-count" style="font-size: 1.3rem;">
                     {{pendingRequest}}
                     </h1>               
                 </div>
               </div>
                 <div  
-                class="card text-white bg-success bg-gr-success mb-3  mx-1"
+                class="card text-white bg-success bg-gr-success mb-3  mx-1 iconHide"
                  style=" width:70px;    border-radius:  6px; height: 33px;"
                >
                 <div class="card-body row text-center " style="padding-top: 6px; height: 40px; ">              
@@ -351,7 +351,7 @@
                 </div>
               </div>
                 <div  
-                class="card text-white bg-danger bg-gr-danger mb-3  mx-1"
+                class="card text-white bg-danger bg-gr-danger mb-3  mx-1 iconHide"
                  style=" width:70px;   border-radius:  6px; height: 33px;"
                >
                 <div class="card-body row text-center " style="padding-top: 6px; height: 40px; ">              
@@ -360,6 +360,17 @@
                     </h1>               
                 </div>
               </div>
+              <div  
+              class="card text-white viewHide  mb-3  mx-1"
+               style="border-radius:  6px; height: 33px; background-color:#0d8f8f;"
+             >
+              <div class="card-body row text-center " style="padding-top: 7px; height: 40px; cursor: pointer; " (click)="showResourceBookingModal()" title="{{bookingResourceTitle}}">              
+                  <h1 id="pending-requests-count" class="requests-count" style="font-size: 1.1rem; cursor: pointer;">
+                   View
+                  </h1>  
+                               
+              </div>
+            </div>
                 <button
                   class="btn btn-primary dropdown-toggle"
                   type="button"

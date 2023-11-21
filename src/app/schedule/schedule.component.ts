@@ -16,6 +16,7 @@ import { ScheduleService } from "./schedule.service";
 import { ViewScheduleComponent } from "./view-schedule/view-schedule.component";
 import * as moment from "moment";
 import { BaseService } from "../core/_services/base.service";
+import { AuthService } from "../core/_services/auth.service";
 
 @Component({
   selector: "app-schedule",
@@ -41,7 +42,7 @@ export class ScheduleComponent implements OnInit {
   recordId: string = "";
   resources$: any = [];
   scheduleTypes$: any = [];
-
+  userAuthorities: string[] = [];
   constructor(
     private cdref: ChangeDetectorRef,
     private fb: FormBuilder,
@@ -51,12 +52,31 @@ export class ScheduleComponent implements OnInit {
     private modalService: NgbModal,
     private toastr: ToastrService,
     private baseService: BaseService,
-    private scheduleService: ScheduleService
+    private scheduleService: ScheduleService,
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
     this.fetchEssentialData();
     this.renderData();
+
+    this.authService.authorities$.subscribe({
+      next: (authorities: any) => {
+        this.userAuthorities = authorities;
+        console.log(authorities);
+      },
+      error: (error:any) => {
+        console.error('Error fetching user authorities:', error);
+      }
+    });
+    
+  
+  }
+
+
+
+  checkAuthority(authority: string): boolean {
+    return this.userAuthorities.includes(authority);
   }
 
   refresh() {

@@ -1738,7 +1738,8 @@ const checkLoadingInterval = setInterval(() => {
   
 
   showRequestActions(eventDetails: any) {
- 
+
+   
     const requestedBy = eventDetails.event.extendedProps.request.requestedBy;
     const date = new Date(
       eventDetails.event.start
@@ -1747,8 +1748,9 @@ const checkLoadingInterval = setInterval(() => {
     const today = new Date().getTime();
 
     const isAdmin = this.globals.principal.isAdmin();
-
-    const isRequestedByCurrentUser = requestedBy.id === this.globals.principal.credentials._id.$oid;
+    const credentialId= this.globals.principal.credentials?._id?.$oid ?? this.globals.principal.credentials?.id;
+   
+    const isRequestedByCurrentUser = requestedBy.id === credentialId;
      
     if (eventDetails.event?.extendedProps?.request?.status === 'pending' || isRequestedByCurrentUser  ) {
       return true;
@@ -2932,11 +2934,11 @@ getCalendarBookingData(){
   });
 
   if(this.bookingResources.length < 2 ){
-  console.log("IN")
+ 
     this.bookingResourceTitle="Calendar Booking View";
     
     }else{
-      console.log("OUT")
+    
     this.bookingResourceTitle="Calendar Booking(s) View";
     }
 

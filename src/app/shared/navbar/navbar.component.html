@@ -38,12 +38,12 @@
           >
           <a
             class="nav-link mx-2"
-            *ngIf="['CREATE_SCHEDULE'] | auth"
+            *ngIf="checkAuthority('CREATE_SCHEDULE')"
             [routerLink]="['/schedules']"
             routerLinkActive="active"
             >Schedules</a
           >
-          <li class="nav-item dropdown" *ngIf="['CREATE_SUPPORT_CASE'] | auth">
+          <li class="nav-item dropdown" *ngIf="checkAuthority('CREATE_SUPPORT_CASE')">
             <a
               class="nav-link mx-2 dropdown-toggle"
               id="navbarDropdownMenuLink"
@@ -73,7 +73,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item dropdown" *ngIf="['ADMIN'] | auth">
+          <li class="nav-item dropdown" *ngIf="checkAuthority('ADMIN')">
             <a
               class="nav-link mx-2 dropdown-toggle"
               id="navbarDropdownMenuLink"

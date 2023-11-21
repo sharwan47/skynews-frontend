@@ -96,11 +96,11 @@ export class CreateSupportCaseComponent implements OnInit {
 
   initializeForm() {
     this.requestForm = this.fb.group({
-      details: ["", [Validators.required]],
+      details: [null, [Validators.required]],
       ticketId: null,
-      subject: ["", [Validators.required]],
-      ticketType: ["", Validators.required], // Ticket Type
-      related_menu: ["", Validators.required], // Related Menu Tab
+      subject: [null, [Validators.required]],
+      ticketType: [null, Validators.required], // Ticket Type
+      related_menu: [null, Validators.required], // Related Menu Tab
       // relatedArea: null, // Related Area Tab
       attachment: null,
     });
@@ -125,18 +125,18 @@ export class CreateSupportCaseComponent implements OnInit {
     
     const maxSizeInBytes =  1024 * 1024; // 10 MB in bytes
 
-    if (fileSizeInBytes > maxSizeInBytes) {
-      this.attachment=null;
-      this.modaleRef = this.modal.open(this.FileSizeExceeded, {
-        backdrop: "static",
-        size: "sm",
-        keyboard: false,
-        windowClass: 'custom-modal'
+    // if (fileSizeInBytes > maxSizeInBytes) {
+    //   this.attachment=null;
+    //   this.modaleRef = this.modal.open(this.FileSizeExceeded, {
+    //     backdrop: "static",
+    //     size: "sm",
+    //     keyboard: false,
+    //     windowClass: 'custom-modal'
 
-      });
+    //   });
 
-      return;
-    }
+    //   return;
+    // }
 
 
       this.attachmentName = this.attachment.name;
@@ -164,6 +164,9 @@ export class CreateSupportCaseComponent implements OnInit {
     console.log("uploaded");
     let formData = new FormData();
 
+
+    if(this.attachment){
+
     formData.append("token", environment.trelloTokenKey);
     formData.append("key", environment.trelloApiKey);
     formData.append("file", this.attachment);
@@ -177,6 +180,7 @@ export class CreateSupportCaseComponent implements OnInit {
     } catch (error) {
       console.error("Error in uploadAttachment:", error);
     }
+   }
   }
 
   formSubmit() {
@@ -203,7 +207,7 @@ export class CreateSupportCaseComponent implements OnInit {
             console.log("Card report submitted successfully");
             this.uploadAttachment(res.cardId);
           }
-          console.log(this.bugticketId);
+         
           this.showModal(res.ticketId);
           this.bugticketId = res.ticketId;
           console.log(this.bugticketId);

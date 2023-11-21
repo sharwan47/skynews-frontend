@@ -46,7 +46,7 @@
       >
         <h4 class="card-title">Resource Schedules</h4>
         <!-- {{#if (inArray user.permissions 'CREATE_SCHEDULE') }} -->
-        <a
+        <a  *ngIf="checkAuthority('CREATE_SCHEDULE')"
           (click)="addRecord()"
           style="text-decoration: none"
           class="d-flex justify-content-center align-items-center px-2 py-1 cursor-pointer"
