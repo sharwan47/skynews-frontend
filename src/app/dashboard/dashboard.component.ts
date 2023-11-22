@@ -794,7 +794,8 @@ for (let i = 0; i < ecDayElements.length; i++) {
         for (let i = 0; i < data.length; i++) {
           const startDate = new Date(data[i].start);
           const endDate = new Date(data[i].end);
-
+          const requestType=data[i].extendedProps.request.requestType;
+ 
       
           if(data[i].status=="pending" && this.filterPendingRequest){
            continue;
@@ -807,7 +808,6 @@ for (let i = 0; i < ecDayElements.length; i++) {
           }
 
 
-
           if (
             startDate.getTime() >= startRange &&
             endDate.getTime() < endRange
@@ -815,20 +815,20 @@ for (let i = 0; i < ecDayElements.length; i++) {
             if (startDate.getDate() === endDate.getDate()) {
 
               const approvalsList=data[i].extendedProps.request.approvals;
- 
+             
               if(approvalsList != undefined)  {
                 if(approvalsList.length == 0){
                    try {
-                const controlRoomName = data[i].extendedProps.request.controlRoom.name;
-                if (!this.getFilterResources.includes(controlRoomName)) {
-                  this.getFilterResources.push(controlRoomName);
-                }
-              } catch (error) {
-                const controlRoomName = data[i].extendedProps.request.resourceId.name;
-                if (!this.getFilterResources.includes(controlRoomName)) {
-                  this.getFilterResources.push(controlRoomName);
-                }
-              }
+                      const controlRoomName = data[i].extendedProps.request.controlRoom.name;
+                      if (!this.getFilterResources.includes(controlRoomName)) {
+                        this.getFilterResources.push(controlRoomName);
+                      }
+                  } catch (error) {
+                      const controlRoomName = data[i].extendedProps.request.resourceId.name;
+                      if (!this.getFilterResources.includes(controlRoomName)) {
+                        this.getFilterResources.push(controlRoomName);
+                      }
+                  }
 
                 }else{
 
@@ -842,7 +842,16 @@ for (let i = 0; i < ecDayElements.length; i++) {
                   }
                 }
 
-              }      
+              } 
+
+              if(requestType == "schedule"){
+                const resourceName = data[i].extendedProps.request.resourceId.name;
+                if (!this.getFilterResources.includes(resourceName)) {
+                  this.getFilterResources.push(resourceName);
+                }
+              }
+              
+             
               
          
 
@@ -938,6 +947,14 @@ for (let i = 0; i < ecDayElements.length; i++) {
                 }
 
               }  
+
+
+              if(requestType == "schedule"){
+                const resourceName = data[i].extendedProps.request.resourceId.name;
+                if (!this.getFilterResources.includes(resourceName)) {
+                  this.getFilterResources.push(resourceName);
+                }
+              }
 
              
         
@@ -1123,12 +1140,12 @@ for (let i = 0; i < ecDayElements.length; i++) {
         const startRange = params.start ? new Date(params.start).getTime() : 0;
         const endRange = params.end ? new Date(params.end).getTime() : 0;
         
-
         const newData: any[] = [];
         this.allBookingData=[];
         for (let i = 0; i < data.length; i++) {
           const startDate = new Date(data[i].start);
           const endDate = new Date(data[i].end);
+          const requestType=data[i].extendedProps.request.requestType;
 
           if(data[i].status=="pending" && this.filterPendingRequest){
             continue;
@@ -1179,6 +1196,12 @@ for (let i = 0; i < ecDayElements.length; i++) {
 
               }  
 
+              if(requestType == "schedule"){
+                const resourceName = data[i].extendedProps.request.resourceId.name;
+                if (!this.getFilterResources.includes(resourceName)) {
+                  this.getFilterResources.push(resourceName);
+                }
+              }
               
                 let requestData=data[i].extendedProps.request;
              
@@ -1271,6 +1294,13 @@ for (let i = 0; i < ecDayElements.length; i++) {
                 }
 
               }  
+
+              if(requestType == "schedule"){
+                const resourceName = data[i].extendedProps.request.resourceId.name;
+                if (!this.getFilterResources.includes(resourceName)) {
+                  this.getFilterResources.push(resourceName);
+                }
+              }
 
             }
 
@@ -1574,7 +1604,14 @@ const checkLoadingInterval = setInterval(() => {
 
   // Remove the contextmenu event listener when it's no longer needed
   removeContextMenuListenerForBooking() {
-    document.removeEventListener('contextmenu', this.contextMenuListenerForBooking);
+    // document.removeEventListener('contextmenu', this.contextMenuListenerForBooking);
+    const elements = document.querySelectorAll('.ec-body');
+    elements.forEach(element => {
+      element.removeEventListener('contextmenu', this.contextMenuListenerForBooking);
+        // element.addEventListener('contextmenu', function (e) {
+        //     e.preventDefault();
+        // });
+    });
   }
 
   hideCopyBookingId() {
@@ -1610,6 +1647,20 @@ const checkLoadingInterval = setInterval(() => {
 
 
   onMouseEnter(eventDetails: any) {
+
+    const requestType = eventDetails.event.extendedProps?.request?.requestType;
+
+    if(requestType == "schedule"){
+      this.hideCopyBookingId();
+      this.copyRequestId=null;
+      this.bookingData=null;
+      this.requestStatus=null;
+      this.removeContextMenuListenerForBooking()
+    
+    }
+
+    if (requestType != "schedule") {
+
     if(eventDetails.event.extendedProps.request.bookingId != this.copyRequestId){
 
       this.hideCopyBookingId();
@@ -1634,8 +1685,6 @@ const checkLoadingInterval = setInterval(() => {
 
  
 
-    // document.addEventListener('contextmenu', this.contextMenuListenerForBooking);
-
 
     this.copiedBookingClass="bi bi-clipboard ";
     const optionsElement = document.querySelector("#ec-options__copy");
@@ -1645,9 +1694,9 @@ const checkLoadingInterval = setInterval(() => {
 
     const requestedBy = eventDetails.event.extendedProps.request.requestedBy;
 
-    const requestType = eventDetails.event.extendedProps?.request?.requestType;
+   
     
-    if (requestType != "schedule") {
+  
       const view = this.ec.getOption("view");
       if (
         view?.toLowerCase()?.includes("timegridday") ||
@@ -2885,7 +2934,6 @@ getCalendarBookingData(){
     }
   });
 
-
   this.allBookingData.forEach((booking: any) => {
     // Find the resource for the current booking
     const matchingResource = this.fetchedResources.find((resource: any) => resource.id === booking.resourceId);
@@ -2897,7 +2945,7 @@ getCalendarBookingData(){
           resourceData=   {
             ...matchingResource,
             primaryRequest:1,
-            resourceStatus:booking.status,
+            resourceStatus:booking.status ?? booking.extendedProps.request.requestType,
             
           }
       
@@ -2905,7 +2953,7 @@ getCalendarBookingData(){
           resourceData=   {
             ...matchingResource,
             secondaryRequest:1,
-            resourceStatus:booking.status,
+            resourceStatus:booking.status ?? booking.extendedProps.request.requestType,
           }
         }
       
@@ -2932,6 +2980,8 @@ getCalendarBookingData(){
       }
     }
   });
+
+
 
   if(this.bookingResources.length < 2 ){
  

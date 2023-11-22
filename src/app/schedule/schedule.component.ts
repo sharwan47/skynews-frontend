@@ -104,6 +104,7 @@ export class ScheduleComponent implements OnInit {
             this.totalRecords = 0;
             this.totalPages = 0;
           } else {
+          
             this.rows = data.docs;
             this.totalRecords = data.totalDocs;
             this.totalPages = data.totalPages;
@@ -200,6 +201,7 @@ export class ScheduleComponent implements OnInit {
       .subscribe(
         (res: any) => {
           this.refresh();
+          this.modaleRef.close();
         },
         (err: any) => {
           const msg = "Failed";
@@ -212,7 +214,8 @@ export class ScheduleComponent implements OnInit {
   }
 
   completeScheduleConfirm(value: any) {
-    this.deletionRecordId = value;
+ 
+    this.recordId = value;
     this.modaleRef = this.modalService.open(this.CompleteModalContent, {
       backdrop: "static",
       size: "sm",

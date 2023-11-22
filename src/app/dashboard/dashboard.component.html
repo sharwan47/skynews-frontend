@@ -813,10 +813,10 @@
         <tbody>
           <tr *ngFor="let booking of bookingResources">
             <td style="width:35%">
-              <span class="badge bg-primary"  *ngIf=" booking.status == 'pending'">{{ booking.bookingId ?? "2023-00-00000"}}</span>
-              <span class="badge bg-success"  *ngIf=" booking.status == 'approved'">{{ booking.bookingId ?? "2023-00-00000"}}</span>
+              <span class="badge bg-primary"  *ngIf=" booking.status == 'pending' ">{{ booking.bookingId ?? "2023-00-00000"}}</span>
+              <span class="badge bg-success"  *ngIf=" booking.status == 'approved' || booking.status == 'Complete'">{{ booking.bookingId ?? "2023-00-00000"}}</span>
               <span class="badge bg-danger"  *ngIf=" booking.status == 'rejected'">{{ booking.bookingId?? "2023-00-00000"}}</span>
-
+              <span class="badge"  style="background-color: #e26d5c"  *ngIf=" booking.status == 'Active'">{{ booking.bookingId ?? "2023-00-00000"}}</span>
             </td>
             <td style="width:40%">
               <ul style="list-style-type: none;">
@@ -835,7 +835,7 @@
                      'bg-danger': resource.resourceStatus === 'rejected'
                    }"></i>
                 <i class="fa-solid fa-s mx-1 bookingResourceSecondary"
-                   *ngIf="resource.secondaryRequest "
+                   *ngIf="resource.secondaryRequest && resource.resourceStatus != 'schedule'"
                    [ngClass]="{
                      'bg-primary': resource.resourceStatus === 'pending',
                      'bg-success': resource.resourceStatus === 'approved',
@@ -848,7 +848,16 @@
                      'bg-success': resource.resourceStatus === 'approved',
                      'bg-danger': resource.resourceStatus === 'rejected'
                    }"></i>
-                <br>
+
+                  <i
+                  class="fa-solid bookingResourcePrimaryOnly fa-p mx-1"
+                  style="background-color: #e26d5c"
+                  *ngIf="resource.resourceStatus== 'schedule'"
+                  [ngClass]="{                 
+                    'bg-success':booking.status == 'Complete'                   
+                  }"
+                  ></i>
+                    <br>
               </span>
             </td>        
           </tr>
@@ -880,8 +889,9 @@
               <ul style="list-style-type: none;">
                 <li *ngFor="let booking of resource.bookings">
                   <span class="badge bg-primary"  *ngIf=" booking.extendedProps.request.status == 'pending'">{{ booking.extendedProps.request.bookingId ?? "2023-00-00000"}}</span>
-                  <span class="badge bg-success"  *ngIf=" booking.extendedProps.request.status == 'approved'">{{ booking.extendedProps.request.bookingId ?? "2023-00-00000"}}</span>
+                  <span class="badge bg-success"  *ngIf=" booking.extendedProps.request.status == 'approved' || booking.extendedProps.request.status == 'Complete'">{{ booking.extendedProps.request.bookingId ?? "2023-00-00000"}}</span>
                   <span class="badge bg-danger"  *ngIf=" booking.extendedProps.request.status == 'rejected'">{{ booking.extendedProps.request.bookingId ?? "2023-00-00000"}}</span>
+                  <span class="badge"  style="background-color: #e26d5c"  *ngIf=" booking.extendedProps.request.status == 'Active'">{{ booking.extendedProps.request.bookingId ?? "2023-00-00000"}}</span>
                 </li>
               </ul>
             </td>
@@ -901,7 +911,7 @@
                 <i 
                 class="fa-solid fa-s mx-1 bookingResourceSecondary"
                
-                 *ngIf="booking.extendedProps?.secondaryRequest"
+                 *ngIf="booking.extendedProps?.secondaryRequest && booking.extendedProps?.request.requestType != 'schedule'"
                  [ngClass]="{
                   'bg-primary':booking.extendedProps.request.status == 'pending',
                   'bg-success':booking.extendedProps.request.status == 'approved',
@@ -917,6 +927,14 @@
                   'bg-success':booking.extendedProps.request.status == 'approved',
                   'bg-danger': booking.extendedProps.request.status == 'rejected'
                 }"
+                 ></i>
+                <i
+                 class="fa-solid bookingResourcePrimaryOnly fa-p mx-1"
+                 style="background-color: #e26d5c"
+                 *ngIf="booking.extendedProps?.request.requestType == 'schedule'"
+                 [ngClass]="{                 
+                    'bg-success':booking.extendedProps.request.status == 'Complete'                   
+                  }"
                  ></i>
                  <br>
               </span>
